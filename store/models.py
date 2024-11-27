@@ -48,7 +48,7 @@ class OrderProduct(models.Model):
    created_at = models.DateTimeField( auto_now_add= True )
 
 
-class slider(models.Model):
+class Slider(models.Model):
    title = models.CharField(max_length=255)
    subtitle = models.TextField(max_length=500)
    image =models.ImageField(null=True)
