@@ -43,7 +43,7 @@ class Product(models.Model):
 
      
 class Order(models.Model):
-   transaction = models.OneToOneField(Transaction,on_delete=models.PROTECT)
+   transaction = models.OneToOneField(Transaction,on_delete=models.PROTECT , null=True)
    created_at = models.DateTimeField( auto_now_add= True )
    updated_at = models.DateTimeField( auto_now= True )
    def __str__(self):

@@ -1,14 +1,20 @@
+import math
 from django.shortcuts import render
 from . forms import UserInfoForm
 from store.models import Product,Cart,Order
+from .models import Transaction,Transactionmethod
 from django.shortcuts import redirect
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
 # Create your views here.
 
-def make_order(request):
-    if request.method != 'POST':
-        return redirect('store.checkout')
+def stripe_transaction(request):
+    transaction = make_transaction(request,paymentMethed.stripe)
+
+def paypal_transaction(request):
+    transaction = make_transaction(request,paymentMethed.stripe)
+
+def make_transaction(request):
     
     form = UserInfoForm(request.POST)
     if form.is_valid():
@@ -20,19 +26,22 @@ def make_order(request):
             total += item.price
 
         if total < 0:
-            return redirect('store.cart')
+            return None
 
 
-        order = Order.objects.create(customer = form.cleaned_data,total=total) 
-        for product in products  :
-            order.orderproduct_set.create(product_id = product.id, price=product.price)
-        send_order_email(order,products )    
-
-        cart.delete()
-        return redirect ('store.checkout_complete') 
-    else :
-        return redirect('store.checkout')   
+        return Transaction.objects.create(customer = form.cleaned_data,
+            amount=math.ceil(total),
+            session = request.session_key,
+            payment_method =pm,
+            items = cart.items,
+                                          
+                                          
+                                          
+            ) 
+         
     
+
+
 
 def send_order_email(order,products):
      msg_html = render_to_string('emails/order.html',{
