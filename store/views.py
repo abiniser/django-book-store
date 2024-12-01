@@ -1,7 +1,10 @@
 from django.shortcuts import render
-from .models import Product,Category,Author,Order,OrderProduct,Slider
+from .models import Cart, Product,Category,Author,Order,OrderProduct,Slider
 from django.core.paginator import Paginator
-
+from django.http import JsonResponse
+from django.utils.translation import gettext 
+from django.core.mail import send_mail
+from django.template.loader import render_to_string
 # Create your views here.
 def index(request):
     products = Product.objects.select_related('author').filter(featured = True)
@@ -18,7 +21,7 @@ def index(request):
 
 def product(request,pid):
      # product have product id
-     product = Product.objects.get(pk =pid)
+     products = Product.objects.get(pk =pid)
      return render(
           request,'product.html',
           {
@@ -60,6 +63,39 @@ def cart (request):
      return render(
           request,'cart.html'
      )
+def cart_update(request, pid):
+     if not request.session.session_key:
+          request.session.create()
+
+     session_id = request.session.session_key
+     cart_model = Cart.objects.filter( session = session_id).last()
+     if cart_model is None:
+          cart_model = Cart.objects.create(session_id = session_id, items=[pid] )
+     elif pid not in cart_model.items:
+          cart_model.items.append(pid)
+          cart_model.save()
+     return JsonResponse({
+          'message' :('The product has been added you your cart.'),
+          'items_count': len(cart_model.items)
+     })
+
+def cart_remove(request, pid):
+     session_id = request.session.session_key
+     
+     if not session_id:
+          return JsonResponse({})
+
+     cart_model = Cart.objects.filter( session = session_id).last()
+     if cart_model is None:
+          cart_model = Cart.objects.create(session_id = session_id, items=[pid] )
+     elif pid in cart_model.items:
+          cart_model.items.remove(pid)
+          cart_model.save()
+     return JsonResponse({
+          'message' :('The product has been removed from you your cart.'),
+          'items_count': len(cart_model.items)
+     })
+
 
 
 
@@ -75,4 +111,14 @@ def checkout_complete (request):
           request,'checkout-complete.html'
      )
 
+def send_order_email(order,products):
+     msg_html = render_to_string('emails/order.html')
+     send_mail(subject='New Order',
+               html_message=msg_html,
+               message=msg_html,
+               from_email='noreeply@example.com',
+               recipient_list=['customer@example.com']
+               
+               )
+     
 
