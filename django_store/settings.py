@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'store',
     'checkout',
+    'paypal.standard.ipn'
 
 ]
 
@@ -136,3 +137,22 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Looking to send emails in production? Check out our Email API/SMTP product!
+EMAIL_HOST = 'sandbox.smtp.mailtrap.io'
+EMAIL_HOST_USER = '675b82549cfca9'
+EMAIL_HOST_PASSWORD = 'c442799104f076'
+EMAIL_PORT = '2525'
+
+SITE_URL = 'http://127.0.0.1:8000'
+
+STRIPE_PUBLISHABLE_KEY='pk_test_51QS0GdRnqSRFB2j2Ut4k5z4zO0wK2kQcHIum1hk8Yd8jKxnSW1Tux2KohPJg8SiPuefreUGsIX28fxi3sPQ4uHgZ007QPCJA5J'
+STRIPE_SECRET_KEY='sk_test_51QS0GdRnqSRFB2j236xb3Y3B29bJ5cHVuNxVexjIapGukSiSagL2hHYdkjKYov7JYopOhyVYzWaspYWrbRBqNzyS00b4k8q2b8'
+STRIPE_ENDPOINT_SECRET ='whsec_3184b85a513d5e75f456d05c50887399e51d8a65285a952874dd9f26f16bd12e'
+
+PAYPAL_EMAIL = 'sb-qht5215281694@business.example.com'
+PAYPAL_TEST = True
+
+
+
+CURRENCY = 'USD'
