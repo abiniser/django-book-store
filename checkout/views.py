@@ -3,7 +3,7 @@ from django.http import JsonResponse,HttpResponse
 from django.shortcuts import redirect
 from django.urls import reverse
 from django_store import settings
-from .forms import UserInfoForm
+from .forms import UserInfoForm,MyPayPalPaymentForm
 from store.models import Product, Cart, Order
 from .models import Transaction, PaymentMethod
 from django.core.mail import send_mail
@@ -44,13 +44,14 @@ def paypal_transaction(request):
         return JsonResponse({
             'message': _('Please enter valid information.')
         }, status=400)
-    form = PayPalPaymentsForm(initial={
+    form = MyPayPalPaymentForm(initial={
         'business':settings.PAYPAL_EMAIL,
         'amount': transaction.amount,
         'invoice':transaction.id,
         'currency_code': settings.CURRENCY,
-        'return_url':f'http://{request.get_host()}/{reverse("store.checkout_completed")}',
-        'cancel_url':f'http://{request.get_host()}/{reverse("store.checkout")}
+        'return_url':f'http://{request.get_host()}{reverse("store.checkout_complete")}',
+        'cancel_url':f'http://{request.get_host()}{reverse("store.checkout")}',
+        'notify_url': f'http://{request.get_host()}{reverse("checkout.paypal-webhook")}'
     })
     return HttpResponse(form.render())
 
