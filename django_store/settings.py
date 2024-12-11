@@ -40,6 +40,8 @@ INSTALLED_APPS = [
     'store',
     'checkout',
     'paypal.standard.ipn'
+    'reports'
+    
 
 ]
 

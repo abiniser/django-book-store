@@ -1,0 +1,61 @@
+{% extends 'admin/change_form.html' %}
+{% load i18n my_filters %}
+
+{% block content %}
+<filedset class='module aligned mb-0'>
+    <div class='form-row'>
+        <div>
+            <label >الزبون:</label>
+            <div class='readonly'> {{ orginal.transaction.customer_name }} </div>
+        </div>
+    </div>
+</filedset>
+<filedset class='module aligned mb-0'>
+    <div class='form-row'>
+        <div>
+            <label >الايميل:</label>
+            <div class='readonly'> {{ orginal.transaction.customer_email }} </div>
+        </div>
+    </div>
+</filedset>
+<filedset class='module aligned mb-0'>
+    <div class='form-row'>
+        <div>
+            <label >وسيلة الدفع:</label>
+            <div class='readonly'> {{ orginal.transaction.get_payment_method_display }} </div>
+        </div>
+    </div>
+</filedset>
+<filedset class='module aligned mb-0'>
+    <div class='form-row'>
+        <div>
+            <label >المبلغ :</label>
+            <div class='readonly'> {{ orginal.transaction.amount }} </div>
+        </div>
+    </div>
+</filedset>
+<filedset class='module aligned mb-0'>
+    <div class='form-row'>
+        <div>
+            <label >تاريخ الطلب :</label>
+            <div class='readonly'> {{ orginal.created_at }} </div>
+        </div>
+    </div>
+</filedset>
+<h1> المنتجات </h1>
+<table style='min-width:600px'>
+    <thead>
+        <tr>
+            <th>الاسم</th>
+            <th>السعر</th>
+        </tr>
+    </thead>
+    {% for item in orginal.orderproduct_set.all  %}
+    <tbody>
+        <tr>
+            <th>{{ item.product.name }}</th>
+            <th>{{ item.price }}</th>
+        </tr>
+    </tbody>
+    {% endfor %}
+{% endblock %}

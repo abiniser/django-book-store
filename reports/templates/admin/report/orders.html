@@ -1,0 +1,72 @@
+{% extends 'admin/change_form.html' %}
+{% load i18n %}
+
+{% block content %}
+
+
+    <h1>{%trans 'Sales Monthly' %}</h1>
+    <div id="monthly-chart" style="width: calc(100% - 275px);" data-list="{{ monthly-stats }}" ></div>
+    
+    <h1>{%trans 'Sales Yearly' %}</h1>
+    <div id="year-chart" style="width: calc(100% - 275px);" data-list="{{ year-stats }}"></div>
+
+    <h1>{%trans 'Sales Weekly' %}</h1>
+    <div id="weekly-chart" style="width: calc(100% - 275px);" data-list="{{ weekly-stats }}" ></div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+<script>
+    const weekly_stats = JSON.parse(document.getElementById('weekly-chart').dataset.list)
+    console.log(weekly_stats)
+    const weekly_chart  = new ApexCharts(document.querySelector9('#weekly-chart')),{
+    chart: {
+        type:'ber'
+    },
+    series: [{
+        name: 'sales',
+        data: weekly_stats.map(e => e.sum)
+    }],
+    xaxis: {
+        weekly_stats.map('${e => e.year}/W${e.week}')
+     }  
+    });
+    
+    weekly_chart.render();
+    
+    const monthly_stats = JSON.parse(document.getElementById('monthly-chart').dataset.list)
+    console.log(monthly_stats)
+    const monthly_chart  = new ApexCharts(document.querySelector9('#monthly-chart')),{
+        chart: {
+            type:'ber'
+            height:200
+        },
+        series: [{
+            name: 'sales',
+            data: data: monthly_stats.map(e => e.sum)
+        }],
+        xaxis: {
+            monthly_stats.map('${e => e.year}/W${e.month}')
+         }  
+        });
+        monthly_chart.render();
+
+        const yearly_stats = JSON.parse(document.getElementById('yearly-chart').dataset.list)
+        console.log(yearly_stats)
+        const Yearly_chart  = new ApexCharts(document.querySelector9('#yearly-chart')),{
+        chart: {
+            type:'ber'
+        },
+        series: [{
+            name: 'sales',
+            data: yearly_stats.map(e => e.sum)
+        }],
+        xaxis: {
+            monthly_stats.map('${ e => e.year}')
+         }  
+        });
+    
+    Yearly_chart.render();
+    
+</script>
+
+{% endblock %}
